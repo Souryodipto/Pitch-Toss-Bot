@@ -1,38 +1,38 @@
 services:
-  - type: web
+  - type: worker
     name: pitch-toss-ai
-    env: docker
-    plan: starter
+    env: python
+    plan: free
+
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+
     autoDeploy: true
-    healthCheckPath: /health
+
     envVars:
-      - key: DRY_RUN
-        value: "false"
-      - key: TIMEZONE
-        value: Asia/Kolkata
-      - key: POSTING_INTERVAL_MINUTES
-        value: "15"
-      - key: RUN_SCAN_ON_STARTUP
-        value: "true"
-      - key: AUTO_DELETE_HOURS
-        value: "8"
-      - key: CONFIDENCE_THRESHOLD
-        value: "0.52"
-      - key: PREDICTION_LEAD_HOURS
-        value: "6"
-      - key: POST_WITHOUT_START_TIME
-        value: "false"
-      - key: PIN_PREDICTIONS
-        value: "true"
       - key: TELEGRAM_BOT_TOKEN
         sync: false
+
       - key: TELEGRAM_CHANNEL_ID
         sync: false
-      - key: DATABASE_URL
-        fromDatabase:
-          name: pitch-toss-ai-db
-          property: connectionString
 
-databases:
-  - name: pitch-toss-ai-db
-    plan: starter
+      - key: DATABASE_URL
+        value: sqlite:///data/pitch_toss_ai.db
+
+      - key: POSTING_INTERVAL_MINUTES
+        value: 10
+
+      - key: TIMEZONE
+        value: Asia/Kolkata
+
+      - key: AUTO_DELETE_HOURS
+        value: 0
+
+      - key: CONFIDENCE_THRESHOLD
+        value: 0.52
+
+      - key: PIN_PREDICTIONS
+        value: true
+
+      - key: DRY_RUN
+        value: false
